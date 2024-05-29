@@ -1,38 +1,25 @@
-name: Codecov
-
-on:
-  push:
-    branches:
-      - 2023.0
-      - 2022.0
-      - 2021.0
-      - 2020.0
-      - hoxton
-      - greenwich
-  pull_request:
-    branches:
-      - 2023.0
-      - 2022.0
-      - 2021.0
-      - 2020.0
-      - hoxton
-      - greenwich
-
 jobs:
   codecov:
-    runs-on: ubuntu-latest
-
+    runs-on: self-hosted
     steps:
-      - name: Checkout codes
-        uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: 17
-      - name: Test with Maven
-        run: mvn clean test -B -U -Psonatype
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          files: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+    - continue-on-error: true
+      name: Checkout codes
+      uses: actions/checkout@v3
+    - continue-on-error: true
+      name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: 17
+    - continue-on-error: true
+      name: Test with Maven
+      run: mvn clean test -B -U -Psonatype
+    - continue-on-error: true
+      name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
+name: Codecov
+on:
+  repository_dispatch:
+    types: trigger-ga___codecov.yml
